@@ -8,9 +8,28 @@ import java.util.List;
  */
 
 public class WeatherInfoTO {
+    private long dt;
+    private String dt_txt;
     private MainTO main = new MainTO();
     private List<WeatherTO> weather= new ArrayList<>();
     private WindTO wind = new WindTO();
+    private String dayOftheWeek;
+
+    public long getDt() {
+        return dt;
+    }
+
+    public void setDt(long dt) {
+        this.dt = dt;
+    }
+
+    public String getDt_txt() {
+        return dt_txt;
+    }
+
+    public void setDt_txt(String dt_txt) {
+        this.dt_txt = dt_txt;
+    }
 
     public MainTO getMain() {
         return main;
@@ -34,5 +53,13 @@ public class WeatherInfoTO {
 
     public void setWind(WindTO wind) {
         this.wind = wind;
+    }
+
+    public void setDayOftheWeek(String dayOftheWeek) {
+        this.dayOftheWeek = dayOftheWeek;
+    }
+
+    public String getDayOftheWeek() {
+        return dayOftheWeek;
     }
 }

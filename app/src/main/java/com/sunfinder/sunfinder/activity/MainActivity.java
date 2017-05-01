@@ -1,17 +1,14 @@
 package com.sunfinder.sunfinder.activity;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,7 +16,6 @@ import com.google.gson.reflect.TypeToken;
 import com.sunfinder.sunfinder.R;
 import com.sunfinder.sunfinder.fragments.CitiesFragment;
 import com.sunfinder.sunfinder.fragments.CityFragment;
-import com.sunfinder.sunfinder.httpclient.CityWeatherclient;
 import com.sunfinder.sunfinder.transferobject.CityInfoTO;
 import com.sunfinder.sunfinder.transferobject.WeatherInfoTO;
 
@@ -30,87 +26,69 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements CitiesFragment.OnCitySelectedListener {
 
     SharedPreferences mSharedPreferences;
-    private List<WeatherInfoTO> mWeatherInfoTO;
+
+    private WeatherInfoTO mWeatherInfoTO;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cities_weather);
-        mWeatherInfoTO = new ArrayList<>();
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+
         if (findViewById(R.id.fragment_container) != null) {
 
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
             if (savedInstanceState != null) {
                 return;
             }
 
-            // Create an instance of ExampleFragment
             CitiesFragment citiesFragment = new CitiesFragment();
 
-            // In case this activity was started with special instructions from an Intent,
-            // pass the Intent's extras to the fragment as arguments
             citiesFragment.setArguments(getIntent().getExtras());
 
-            // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, citiesFragment).commit();
         }
 
-//        GetCityWeatherTask getCityWeatherTask = new GetCityWeatherTask();
-//        getCityWeatherTask.execute("");
          buildCityInfo();
     }
 
     public void onCitySelected(int position) {
-        // The user selected the headline of an article from the HeadlinesFragment
 
-        // Capture the article fragment from the activity layout
-        CityFragment articleFrag = (CityFragment)
-                getSupportFragmentManager().findFragmentById(R.id.article_fragment);
+        if (isNetworkAvailable()) {
 
-        if (articleFrag != null) {
-            // If article frag is available, we're in two-pane layout...
+            CityFragment cityFrag = (CityFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.article_fragment);
 
-            // Call a method in the ArticleFragment to update its content
-            articleFrag.updateCityView(position);
+            if (cityFrag != null) {
+                cityFrag.updateCityView(getCityInfoObjectString(position));
 
+            } else {
+                CityFragment newFragment = new CityFragment();
+                Bundle args = new Bundle();
+                args.putString("CityInfoTO", getCityInfoObjectString(position));
+                newFragment.setArguments(args);
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
         } else {
-            // If the frag is not available, we're in the one-pane layout and must swap frags...
-
-            // Create fragment and give it an argument for the selected article
-            CityFragment newFragment = new CityFragment();
-            Bundle args = new Bundle();
-            args.putInt(CityFragment.ARG_POSITION, position);
-            newFragment.setArguments(args);
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.fragment_container, newFragment);
-            transaction.addToBackStack(null);
-
-            // Commit the transaction
-            transaction.commit();
+            Toast.makeText(getApplicationContext(), "Please check your network Connectivity", Toast.LENGTH_LONG).show();
         }
     }
 
-    private class GetCityWeatherTask extends AsyncTask<String, Void, WeatherInfoTO> {
-        @Override
-        protected WeatherInfoTO doInBackground(String... urls) {
-            // we use the OkHttp library from https://github.com/square/okhttp
-            CityWeatherclient client = new CityWeatherclient();
-            WeatherInfoTO weatherInfoTO = client.getCityWeather("0", "0");
+    private String getCityInfoObjectString(int position) {
+        CityInfoTO cityInfoTO = getCity(position);
 
-            return weatherInfoTO;
-        }
+        Gson gson = new Gson();
+        Type type = new TypeToken<CityInfoTO>() {}.getType();
 
-        @Override
-        protected void onPostExecute(WeatherInfoTO weatherInfoTO) {
-            mWeatherInfoTO.add(weatherInfoTO);
-        }
+        return gson.toJson(cityInfoTO, type);
     }
+
+
 
     private void buildCityInfo() {
         Gson gson = new Gson();
@@ -193,6 +171,24 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
         newyorkInfo.setLongitude(-74.009632);
 
         return newyorkInfo;
+    }
+
+    private CityInfoTO getCity(int position) {
+        Gson gson = new Gson();
+
+        String json = mSharedPreferences.getString(getString(R.string.shared_preference_key),"");
+        Type type = new TypeToken<List<CityInfoTO>>() {}.getType();
+
+        List<CityInfoTO> cityInfoTOList = gson.fromJson(json, type);
+
+        return cityInfoTOList.get(position);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

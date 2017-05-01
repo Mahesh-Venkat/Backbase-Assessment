@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunfinder.sunfinder.R;
+import com.sunfinder.sunfinder.activity.MainActivity;
 import com.sunfinder.sunfinder.transferobject.CityInfoTO;
 
 import java.lang.reflect.Type;
@@ -39,15 +40,16 @@ public class CitiesAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.city_item, parent, false);
+        View rowView = inflater.inflate(R.layout.city_row_item, parent, false);
 
         RelativeLayout relativeLayout = (RelativeLayout) rowView.findViewById(R.id.city_item_layout);
         relativeLayout.setBackgroundColor(Color.parseColor(colorList.get(position%5)));
 
         TextView textView = (TextView) rowView.findViewById(R.id.city_name);
+
         ImageButton deleteButton = (ImageButton) rowView.findViewById(R.id.delete_button);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +57,15 @@ public class CitiesAdapter extends ArrayAdapter<String> {
                 citiesList.remove(position);
                 deleteTheCityFromSharedPReferences(position);
                 notifyDataSetChanged();
+            }
+        });
+
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(context instanceof MainActivity){
+                    ((MainActivity)context).onCitySelected(position);
+                }
             }
         });
 

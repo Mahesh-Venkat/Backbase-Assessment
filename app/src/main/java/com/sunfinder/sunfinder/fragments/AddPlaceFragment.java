@@ -6,7 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunfinder.sunfinder.R;
@@ -26,13 +25,9 @@ import com.sunfinder.sunfinder.transferobject.CityInfoTO;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * An activity that displays a Google map with a marker (pin) to indicate a particular location.
- */
 public class AddPlaceFragment extends Fragment
         implements OnMapReadyCallback, OnMapClickListener {
 
@@ -87,25 +82,43 @@ public class AddPlaceFragment extends Fragment
     public void onMapClick(LatLng point) {
         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
+        String cityName = "";
         try {
             addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
         if (addresses != null && addresses.size() > 0) {
-            String cityName = addresses.get(0).getAddressLine(0);
+            if (addresses.get(0).getLocality() !=null && !addresses.get(0).getLocality().isEmpty()) {
+                cityName = addresses.get(0).getLocality();
+            } else {
+                cityName = addresses.get(0).getSubAdminArea();
+            }
             mMap.addMarker(new MarkerOptions().position(point)
                     .title(cityName));
             writeNewPlaceTOSharedPReference(cityName, point);
         }
+        replaceMapFragmentWithCitiesFragment();
+        Toast.makeText(getContext(), cityName + "is Added Successfully", Toast.LENGTH_LONG).show();
+    }
+
+    private void replaceMapFragmentWithCitiesFragment() {
+
+        CitiesFragment citiesFragment = new CitiesFragment();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.fragment_container, citiesFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void writeNewPlaceTOSharedPReference(String cityName, LatLng point) {
         List<CityInfoTO> cityInfoList = getCities();
         CityInfoTO cityInfoTo = new CityInfoTO();
         cityInfoTo.setCityName(cityName);
-        cityInfoTo.setLatitude(((double) point.latitude));
-        cityInfoTo.setLatitude(((double) point.longitude));
+        cityInfoTo.setLatitude(point.latitude);
+        cityInfoTo.setLongitude(point.longitude);
 
         cityInfoList.add(cityInfoTo);
 
@@ -118,15 +131,6 @@ public class AddPlaceFragment extends Fragment
         editor.commit();
     }
 
-    /**
-     * Manipulates the map when it's available.
-     * The API invokes this callback when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user receives a prompt to install
-     * Play services inside the SupportMapFragment. The API invokes this method after the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null) {

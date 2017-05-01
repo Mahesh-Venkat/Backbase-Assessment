@@ -3,7 +3,8 @@ package com.sunfinder.sunfinder.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
@@ -11,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,9 +30,7 @@ public class CitiesFragment extends ListFragment {
 
     SharedPreferences mSharedPreferences;
 
-    // The container Activity must implement this interface so the frag can deliver messages
     public interface OnCitySelectedListener {
-        /** Called by HeadlinesFragment when a list item is selected */
         public void onCitySelected(int position);
     }
 
@@ -42,7 +40,7 @@ public class CitiesFragment extends ListFragment {
 
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         setHasOptionsMenu(true);
-        // Create an array adapter for the list view, using the Ipsum headlines array
+
         setListAdapter(new CitiesAdapter(getContext(), getCities()));
     }
 
@@ -55,21 +53,31 @@ public class CitiesFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.option_add_place) {
-            addMapFragment();
+            if (isNetworkAvailable()) {
+                addMapFragment();
+            } else {
+                Toast.makeText(getActivity(), "Please check your network Connectivity", Toast.LENGTH_LONG).show();
+            }
+        } else if (item.getItemId() == R.id.option_help) {
+            addHelpFragment();
         }
         return true;
     }
 
     private void addMapFragment() {
-        // Create an instance of ExampleFragment
         AddPlaceFragment addPlaceFragment = new AddPlaceFragment();
 
-        // Add the fragment to the 'fragment_container' FrameLayout
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.fragment_container, addPlaceFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void addHelpFragment() {
+        HelpFragment helpFragment = new HelpFragment();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, helpFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -95,8 +103,6 @@ public class CitiesFragment extends ListFragment {
     public void onStart() {
         super.onStart();
 
-        // When in two-pane layout, set the listview to highlight the selected list item
-        // (We do this during onStart because at the point the listview is available.)
         if (getFragmentManager().findFragmentById(R.id.article_fragment) != null) {
             getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
@@ -106,8 +112,6 @@ public class CitiesFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception.
         try {
             mCallback = (OnCitySelectedListener) activity;
         } catch (ClassCastException e) {
@@ -119,15 +123,20 @@ public class CitiesFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Notify the parent activity of selected item
+        Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_LONG).show();
         mCallback.onCitySelected(position);
-
-        // Set the item as checked to be highlighted when in two-pane layout
-        getListView().setItemChecked(position, true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setListAdapter(new CitiesAdapter(getContext(), getCities()));
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
