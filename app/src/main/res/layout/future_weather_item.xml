@@ -8,68 +8,69 @@
 
     <TextView
         android:id="@+id/text_column_day"
-        android:layout_width="wrap_content"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text=""
         android:textSize="15dp"
         android:textStyle="bold"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/text_column_temperature"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text=""
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/text_column_day"
         android:layout_toEndOf="@+id/text_column_day"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:textSize="15dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/text_column_humidity"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text=""
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/text_column_temperature"
         android:layout_toEndOf="@+id/text_column_temperature"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:textSize="15dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/text_column_rain_chance_item"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_toEndOf="@+id/text_column_humidity"
-        android:layout_toRightOf="@+id/text_column_humidity"
-        android:text="TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/text_column_wind"
+        android:layout_toRightOf="@+id/text_column_wind"
+        android:text=""
+        android:layout_alignParentRight="true"
         android:textSize="15dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/text_column_wind"
-        android:layout_width="wrap_content"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_toEndOf="@+id/text_column_rain_chance_item"
-        android:layout_toRightOf="@+id/text_column_rain_chance_item"
-        android:text="TextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/text_column_humidity"
+        android:layout_toRightOf="@+id/text_column_humidity"
+        android:text=""
+        android:textColor="@android:color/white"
         android:textSize="15dp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"/>
+        android:textStyle="bold" />
 
 </RelativeLayout>

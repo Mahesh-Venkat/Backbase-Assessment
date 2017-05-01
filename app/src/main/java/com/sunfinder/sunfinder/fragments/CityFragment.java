@@ -114,16 +114,24 @@ public class CityFragment extends Fragment {
         protected void onPostExecute(CityWeatherInfoTO cityWeatherInfoTO) {
 
             WeatherInfoTO weatherInfoTO = cityWeatherInfoTO.getTodaysWeather();
-            //Update UI here with weathInfoTO
-            cityTextView.setText(cityInfoTO.getCityName());
-            int temperature = (int)Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
-            temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
-            humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity())+"%");
-            rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
-            windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed())+"km/h");
-            fiveDaysWeatherListView.setDivider(null);
-            fiveDaysWeatherListView.setDividerHeight(0);
-            fiveDaysWeatherListView.setAdapter(new ForecastedWeatherAdapter(getContext(), cityWeatherInfoTO.getForcastedWeather()));
+
+            if (weatherInfoTO != null) {
+                //Update UI here with weathInfoTO
+                cityTextView.setText(cityInfoTO.getCityName());
+                int temperature = (int) Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
+                temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
+                humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity()) + "%");
+                rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
+                windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + "km/h");
+            }
+
+            List<WeatherInfoTO> forecastedWeather = cityWeatherInfoTO.getForcastedWeather();
+            if (forecastedWeather != null) {
+                fiveDaysWeatherListView.setDivider(null);
+                fiveDaysWeatherListView.setDividerHeight(0);
+                fiveDaysWeatherListView.setAdapter(new ForecastedWeatherAdapter(getContext(),forecastedWeather ));
+            }
+
         }
     }
 }

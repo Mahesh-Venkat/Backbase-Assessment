@@ -92,14 +92,15 @@ public class AddPlaceFragment extends Fragment
             if (addresses.get(0).getLocality() !=null && !addresses.get(0).getLocality().isEmpty()) {
                 cityName = addresses.get(0).getLocality();
             } else {
-                cityName = addresses.get(0).getSubAdminArea();
+                cityName = addresses.get(0).getAdminArea();
             }
             mMap.addMarker(new MarkerOptions().position(point)
                     .title(cityName));
             writeNewPlaceTOSharedPReference(cityName, point);
+            Toast.makeText(getContext(), cityName + "is Added Successfully", Toast.LENGTH_LONG).show();
         }
         replaceMapFragmentWithCitiesFragment();
-        Toast.makeText(getContext(), cityName + "is Added Successfully", Toast.LENGTH_LONG).show();
+
     }
 
     private void replaceMapFragmentWithCitiesFragment() {
@@ -137,7 +138,5 @@ public class AddPlaceFragment extends Fragment
             mMap = googleMap;
             setUpMap();
         }
-
     }
-
 }
