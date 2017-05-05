@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="city_background">#5499C7</color>
     <color name="city_weather_background">#CD5C5C</color>
+    <color name="color_white">#ffffff</color>
 </resources>

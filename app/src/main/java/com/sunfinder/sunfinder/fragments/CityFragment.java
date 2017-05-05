@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public class CityFragment extends Fragment {
     private TextView rainChancesTextView;
     private TextView windTextView;
     private ListView fiveDaysWeatherListView;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -48,6 +50,7 @@ public class CityFragment extends Fragment {
         rainChancesTextView = (TextView) view.findViewById(R.id.text_rain_chances);
         windTextView = (TextView) view.findViewById(R.id.text_wind);
         fiveDaysWeatherListView = (ListView) view.findViewById(R.id.list_five_days_climate);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         return view;
     }
@@ -92,6 +95,12 @@ public class CityFragment extends Fragment {
 
     private class GetCityWeatherTask extends AsyncTask<String, Void, CityWeatherInfoTO> {
         CityInfoTO cityInfoTO;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected CityWeatherInfoTO doInBackground(String... urls) {
 
@@ -114,6 +123,7 @@ public class CityFragment extends Fragment {
         protected void onPostExecute(CityWeatherInfoTO cityWeatherInfoTO) {
 
             WeatherInfoTO weatherInfoTO = cityWeatherInfoTO.getTodaysWeather();
+            progressBar.setVisibility(View.INVISIBLE);
 
             if (weatherInfoTO != null) {
                 //Update UI here with weathInfoTO
