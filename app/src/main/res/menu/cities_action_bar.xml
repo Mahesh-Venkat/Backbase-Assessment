@@ -3,9 +3,16 @@
     <item
         android:id="@+id/option_add_place"
         android:title="@string/option_add_place"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/option_settings"
+        android:title="@string/option_settings"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="always"/>
     <item
         android:id="@+id/option_help"
         android:title="@string/option_help"
+        android:icon="@drawable/ic_help"
         app:showAsAction="always"/>
 </menu>

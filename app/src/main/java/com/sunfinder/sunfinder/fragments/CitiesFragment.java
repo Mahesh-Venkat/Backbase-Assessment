@@ -30,6 +30,7 @@ public class CitiesFragment extends ListFragment {
 
     SharedPreferences mSharedPreferences;
 
+
     public interface OnCitySelectedListener {
         public void onCitySelected(int position);
     }
@@ -40,7 +41,6 @@ public class CitiesFragment extends ListFragment {
 
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         setHasOptionsMenu(true);
-
         setListAdapter(new CitiesAdapter(getContext(), getCities()));
     }
 
@@ -68,7 +68,7 @@ public class CitiesFragment extends ListFragment {
         AddPlaceFragment addPlaceFragment = new AddPlaceFragment();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, addPlaceFragment);
+        transaction.replace(R.id.cities_fragment_container, addPlaceFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -77,7 +77,7 @@ public class CitiesFragment extends ListFragment {
         HelpFragment helpFragment = new HelpFragment();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, helpFragment);
+        transaction.replace(R.id.cities_fragment_container, helpFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
