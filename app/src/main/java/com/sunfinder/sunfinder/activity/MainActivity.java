@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
                 args.putString("CityInfoTO", getCityInfoObjectString(position));
                 newFragment.setArguments(args);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, newFragment);
+                transaction.replace(R.id.cities_fragment_container, newFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
