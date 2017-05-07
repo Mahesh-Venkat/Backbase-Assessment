@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,10 +21,9 @@ import com.sunfinder.sunfinder.fragments.CityFragment;
 import com.sunfinder.sunfinder.httpclient.CityWeatherclient;
 import com.sunfinder.sunfinder.transferobject.CityInfoTO;
 import com.sunfinder.sunfinder.transferobject.WeatherInfoTO;
+import com.sunfinder.sunfinder.utils.Utils;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements CitiesFragment.OnCitySelectedListener {
 
@@ -95,15 +93,13 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
     }
 
     private String getCityInfoObjectString(int position) {
-        CityInfoTO cityInfoTO = getCity(position);
+        CityInfoTO cityInfoTO = Utils.getCity(position, getApplicationContext(), mSharedPreferences);
 
         Gson gson = new Gson();
         Type type = new TypeToken<CityInfoTO>() {}.getType();
 
         return gson.toJson(cityInfoTO, type);
     }
-
-
 
     private void buildCityInfo() {
         Gson gson = new Gson();
@@ -114,89 +110,10 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
         if (cititesInfo == null || cititesInfo.isEmpty()) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
 
-            editor.putString(getString(R.string.shared_preference_key), getCititesJSONArrayInString());
+            editor.putString(getString(R.string.shared_preference_key), Utils.getCititesJSONArrayInString());
             editor.commit();
         }
 
-    }
-
-    private String getCititesJSONArrayInString(){
-
-        List<CityInfoTO> cityInfoList = new ArrayList<>();
-        cityInfoList.add(getAmsterdamCityTO());
-        cityInfoList.add(getAtlantaCityTO());
-        cityInfoList.add(getHyderabadCityTO());
-        cityInfoList.add(getLondonCityTO());
-        cityInfoList.add(getNewYorkCityTO());
-
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<CityInfoTO>>() {}.getType();
-        String json = gson.toJson(cityInfoList, type);
-
-        Log.d("Cities string Json", json);
-
-        return json;
-    }
-
-    private CityInfoTO getAmsterdamCityTO() {
-        CityInfoTO amsterdamInfo = new CityInfoTO();
-
-        amsterdamInfo.setCityName("Amsterdam");
-        amsterdamInfo.setLatitude(52.371481);
-        amsterdamInfo.setLongitude(4.927874);
-
-        return amsterdamInfo;
-    }
-
-    private CityInfoTO getAtlantaCityTO() {
-        CityInfoTO atlantaInfo = new CityInfoTO();
-
-        atlantaInfo.setCityName("Atlanta");
-        atlantaInfo.setLatitude(33.749366);
-        atlantaInfo.setLongitude(-84.389030);
-
-        return atlantaInfo;
-    }
-
-    private CityInfoTO getHyderabadCityTO() {
-        CityInfoTO hyderabadInfo = new CityInfoTO();
-
-        hyderabadInfo.setCityName("Hyderabad");
-        hyderabadInfo.setLatitude(17.383323);
-        hyderabadInfo.setLongitude(78.450562);
-
-        return hyderabadInfo;
-    }
-
-    private CityInfoTO getLondonCityTO() {
-        CityInfoTO londonInfo = new CityInfoTO();
-
-        londonInfo.setCityName("London");
-        londonInfo.setLatitude(51.526599);
-        londonInfo.setLongitude(-0.123625);
-
-        return londonInfo;
-    }
-
-    private CityInfoTO getNewYorkCityTO() {
-        CityInfoTO newyorkInfo = new CityInfoTO();
-
-        newyorkInfo.setCityName("Newyork");
-        newyorkInfo.setLatitude(40.718843);
-        newyorkInfo.setLongitude(-74.009632);
-
-        return newyorkInfo;
-    }
-
-    private CityInfoTO getCity(int position) {
-        Gson gson = new Gson();
-
-        String json = mSharedPreferences.getString(getString(R.string.shared_preference_key),"");
-        Type type = new TypeToken<List<CityInfoTO>>() {}.getType();
-
-        List<CityInfoTO> cityInfoTOList = gson.fromJson(json, type);
-
-        return cityInfoTOList.get(position);
     }
 
     private boolean isNetworkAvailable() {
@@ -219,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
             CityWeatherclient client = new CityWeatherclient();
 
-            cityInfoTO = getAtlantaCityTO();
+            cityInfoTO = Utils.getAtlantaCityTO();
 
             WeatherInfoTO weatherInfoTO = client.getCityTodaysWeather(getApplicationContext(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()));
 
