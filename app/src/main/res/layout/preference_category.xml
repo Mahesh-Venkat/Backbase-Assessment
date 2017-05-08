@@ -5,6 +5,7 @@ android:id="@android:id/title"
 android:textColor="@color/color_backbase"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-android:textSize="20dp" android:padding="10dp"
+android:textSize="20dp"
+android:padding="10dp"
 android:textStyle="bold"
 />

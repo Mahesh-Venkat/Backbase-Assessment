@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
                     .add(R.id.fragment_container, citiesFragment).commit();
         }
         buildCityInfo();
+        setDefaultMeasurementsSharedPreferences();
         displayFirstCitysWeather();
     }
 
@@ -119,6 +120,15 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
         }
     }
 
+
+    private void setDefaultMeasurementsSharedPreferences() {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+
+        editor.putString(getString(R.string.shared_preference_settings_measurements), getResources().getStringArray(R.array.pref_measurements_values)[0]);
+        editor.commit();
+    }
+
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -128,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
     private class GetCityWeatherTask extends AsyncTask<String, Void, WeatherInfoTO> {
         CityInfoTO cityInfoTO;
+        String units = mSharedPreferences.getString("measurements","");
 
         @Override
         protected void onPreExecute() {
@@ -136,9 +147,10 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
         @Override
         protected WeatherInfoTO doInBackground(String... urls) {
+
             CityWeatherclient client = new CityWeatherclient();
             cityInfoTO = Utils.getCityInfoTOFromString(urls[0]);
-            return client.getCityTodaysWeather(getApplicationContext(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()));
+            return client.getCityTodaysWeather(getApplicationContext(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()), units);
         }
 
         @Override

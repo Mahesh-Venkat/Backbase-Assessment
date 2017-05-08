@@ -1,5 +1,8 @@
 package com.sunfinder.sunfinder.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +36,8 @@ public class CityFragment extends Fragment {
     private TextView windTextView;
     private ListView fiveDaysWeatherListView;
     private ProgressBar progressBar;
+    private SharedPreferences mSharedPreferences;
+    private Resources resources = getActivity().getResources();
 
 
     @Override
@@ -43,6 +48,8 @@ public class CityFragment extends Fragment {
         }
 
         View view = inflater.inflate(R.layout.city_weather_view, container, false);
+
+        mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         cityTextView = (TextView) view.findViewById(R.id.text_city_name);
         temperatureTextView = (TextView) view.findViewById(R.id.text_temperature);
@@ -95,6 +102,7 @@ public class CityFragment extends Fragment {
 
     private class GetCityWeatherTask extends AsyncTask<String, Void, CityWeatherInfoTO> {
         CityInfoTO cityInfoTO;
+        String units = mSharedPreferences.getString("measurements","");
 
         @Override
         protected void onPreExecute() {
@@ -108,9 +116,9 @@ public class CityFragment extends Fragment {
 
             cityInfoTO = getCityInfoTOFromString(urls[0]);
 
-            WeatherInfoTO weatherInfoTO = client.getCityTodaysWeather(getActivity(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()));
+            WeatherInfoTO weatherInfoTO = client.getCityTodaysWeather(getActivity(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()), units);
 
-            List<WeatherInfoTO> forcastedWeather = client.getCityForecastedWeather(getActivity(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()));
+            List<WeatherInfoTO> forcastedWeather = client.getCityForecastedWeather(getActivity(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()), units);
 
             CityWeatherInfoTO cityWeatherInfoTO = new CityWeatherInfoTO();
             cityWeatherInfoTO.setForcastedWeather(forcastedWeather);
@@ -127,12 +135,16 @@ public class CityFragment extends Fragment {
 
             if (weatherInfoTO != null) {
                 //Update UI here with weathInfoTO
-                cityTextView.setText(cityInfoTO.getCityName());
-                int temperature = (int) Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
-                temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
-                humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity()) + "%");
-                rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
-                windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + "km/h");
+                if (units.equals(resources.getString(R.string.list_preference_item_1))) {
+                    cityTextView.setText(cityInfoTO.getCityName());
+                    int temperature = (int) Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
+                    temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
+                    humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity()) + "%");
+                    rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
+                    windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + "km/h");
+                } else {
+
+                }
             }
 
             List<WeatherInfoTO> forecastedWeather = cityWeatherInfoTO.getForcastedWeather();

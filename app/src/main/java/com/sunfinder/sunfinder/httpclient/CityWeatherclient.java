@@ -28,12 +28,12 @@ import java.util.List;
 public class CityWeatherclient {
     private Context mContext;
 
-    public WeatherInfoTO getCityTodaysWeather(Context context, String latitude, String longitude) {
+    public WeatherInfoTO getCityTodaysWeather(Context context, String latitude, String longitude, String units) {
         mContext = context;
 
         try {
             //String currentWeatherUrl = "http://api.openweathermap.org/data/2.5/weather?lat=0&lon=0&appid=c6e381d8c7ff98f0fee43775817cf6ad&units=metric";
-            String currentWeatherUrl = buildTodaysWeatherUrl(latitude, longitude);
+            String currentWeatherUrl = buildTodaysWeatherUrl(latitude, longitude, units);
             URL url = new URL(currentWeatherUrl);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
@@ -55,11 +55,11 @@ public class CityWeatherclient {
         }
     }
 
-    public List<WeatherInfoTO> getCityForecastedWeather(Context context, String latitude, String longitude) {
+    public List<WeatherInfoTO> getCityForecastedWeather(Context context, String latitude, String longitude, String units) {
         mContext = context;
 
         try {
-            String currentWeatherUrl = buildForcastedWeatherUrl(latitude, longitude);
+            String currentWeatherUrl = buildForcastedWeatherUrl(latitude, longitude, units);
             URL url = new URL(currentWeatherUrl);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
@@ -81,16 +81,16 @@ public class CityWeatherclient {
         }
     }
 
-    private String buildTodaysWeatherUrl(String latitude, String longitude) {
+    private String buildTodaysWeatherUrl(String latitude, String longitude, String units) {
         String url = mContext.getResources().getString(R.string.weather_api_base_url) + "weather?" + "lat=" + latitude + "&lon=" + longitude + "&appid="
-                + mContext.getResources().getString(R.string.weather_api_key) + "&units=metric";
+                + mContext.getResources().getString(R.string.weather_api_key) + "&units="+units;
 
         return url;
     }
 
-    private String buildForcastedWeatherUrl(String latitude, String longitude) {
+    private String buildForcastedWeatherUrl(String latitude, String longitude, String units) {
         String url = mContext.getResources().getString(R.string.weather_api_base_url) + "forecast?" + "lat=" + latitude + "&lon=" + longitude + "&appid="
-                + mContext.getResources().getString(R.string.weather_api_key) + "&units=metric";
+                + mContext.getResources().getString(R.string.weather_api_key) + "&units=" + units;
 
         return url;
     }
