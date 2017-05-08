@@ -59,8 +59,14 @@ public class CitiesFragment extends ListFragment {
             }
         } else if (item.getItemId() == R.id.option_help) {
             addHelpFragment();
+        } else if (item.getItemId() == R.id.option_settings) {
+            addSettingsFragment();
         }
         return true;
+    }
+
+    private void addSettingsFragment() {
+        Toast.makeText(getContext(), "Settings option is coming soon", Toast.LENGTH_SHORT).show();
     }
 
     private void addMapFragment() {
@@ -74,6 +80,7 @@ public class CitiesFragment extends ListFragment {
 
     private void addHelpFragment() {
         HelpFragment helpFragment = new HelpFragment();
+        helpFragment.setHasOptionsMenu(false);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.cities_fragment_container, helpFragment);

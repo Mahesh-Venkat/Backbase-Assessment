@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
     public void onCitySelected(int position) {
 
+
         if (isNetworkAvailable()) {
             CityFragment newFragment = new CityFragment();
             Bundle args = new Bundle();
