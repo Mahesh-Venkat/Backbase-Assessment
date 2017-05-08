@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
         android:key="measurements"
+        android:layout="@layout/preference_category"
         android:title="@string/measurements_title"
         android:dialogTitle="@string/measurements_summary"
         android:entries="@array/pref_measurements"

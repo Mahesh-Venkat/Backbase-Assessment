@@ -67,6 +67,12 @@ public class CitiesFragment extends ListFragment {
 
     private void addSettingsFragment() {
         //Toast.makeText(getContext(), "Settings option is coming soon", Toast.LENGTH_SHORT).show();
+        SettingsFragment settingsFragment = new SettingsFragment();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.cities_fragment_container, settingsFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void addMapFragment() {

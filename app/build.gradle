@@ -33,6 +33,7 @@ dependencies {
     compile "com.android.support:design:$SUPPORT"
     compile "com.android.support:appcompat-v7:$SUPPORT"
     compile "com.android.support:preference-v14:$SUPPORT"
+    compile "com.android.support:preference-v7:$SUPPORT"
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.google.android.gms:play-services:9.8.0'
     testCompile 'junit:junit:4.12'
