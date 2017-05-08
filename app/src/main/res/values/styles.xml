@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/color_backbase</item>
         <item name="colorPrimaryDark">@color/color_backbase_dark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
     <style name="general_info_text_styling" >
         <item name="android:textSize">15dp</item>

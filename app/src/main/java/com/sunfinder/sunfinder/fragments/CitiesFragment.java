@@ -66,7 +66,7 @@ public class CitiesFragment extends ListFragment {
     }
 
     private void addSettingsFragment() {
-        Toast.makeText(getContext(), "Settings option is coming soon", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Settings option is coming soon", Toast.LENGTH_SHORT).show();
     }
 
     private void addMapFragment() {

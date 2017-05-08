@@ -1,0 +1,11 @@
+<resources>
+    <string-array name="pref_measurements">
+        <item name="metrics">Metrics</item>
+        <item name="english">English</item>
+    </string-array>
+
+    <string-array name="pref_measurements_values">
+        <item name="metrics">Metrics</item>
+        <item name="english">English</item>
+    </string-array>
+</resources>

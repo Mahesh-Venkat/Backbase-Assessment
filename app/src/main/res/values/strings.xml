@@ -6,4 +6,7 @@
     <string name="option_settings">Settings</string>
     <string name="option_help">Help</string>
     <string name="no_citites_text"> Please click + to add your favorite city </string>
+    <string name="measurements_title">Measurements</string>
+    <string name="measurements_summary">Please pick a Measurement</string>
+    <string name="pref_measurements_default">metrics</string>
 </resources>
