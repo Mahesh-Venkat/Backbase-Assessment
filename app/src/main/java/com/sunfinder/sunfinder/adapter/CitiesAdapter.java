@@ -56,6 +56,9 @@ public class CitiesAdapter extends ArrayAdapter<String> {
             public void onClick(View view) {
                 citiesList.remove(position);
                 deleteTheCityFromSharedPReferences(position);
+                if(context instanceof MainActivity){
+                    ((MainActivity)context).displayFirstCitysWeather();
+                }
                 notifyDataSetChanged();
             }
         });

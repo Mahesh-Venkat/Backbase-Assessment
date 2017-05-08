@@ -30,7 +30,6 @@ public class CitiesFragment extends ListFragment {
 
     SharedPreferences mSharedPreferences;
 
-
     public interface OnCitySelectedListener {
         public void onCitySelected(int position);
     }
@@ -103,9 +102,6 @@ public class CitiesFragment extends ListFragment {
     public void onStart() {
         super.onStart();
 
-        if (getFragmentManager().findFragmentById(R.id.article_fragment) != null) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }
     }
 
     @Override

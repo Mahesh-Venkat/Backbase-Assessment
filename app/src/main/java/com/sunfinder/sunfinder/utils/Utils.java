@@ -87,7 +87,7 @@ public final class Utils {
         return json;
     }
 
-    public static CityInfoTO getCity(int position, Context context, SharedPreferences mSharedPreferences) {
+    public static List<CityInfoTO> getCitiesFromSharedPReferences(Context context, SharedPreferences mSharedPreferences) {
         Gson gson = new Gson();
 
         String json = mSharedPreferences.getString(context.getResources().getString(R.string.shared_preference_key),"");
@@ -95,8 +95,23 @@ public final class Utils {
 
         List<CityInfoTO> cityInfoTOList = gson.fromJson(json, type);
 
+        return cityInfoTOList;
+    }
+
+    public static CityInfoTO getCity(int position, Context context, SharedPreferences mSharedPreferences) {
+
+        List<CityInfoTO> cityInfoTOList = getCitiesFromSharedPReferences(context, mSharedPreferences);
+
         return cityInfoTOList.get(position);
     }
 
+    public static CityInfoTO getCityInfoTOFromString(String cityInfo) {
+        Gson gson = new Gson();
 
+        Type type = new TypeToken<CityInfoTO>() {}.getType();
+
+        CityInfoTO cityInfoTO = gson.fromJson(cityInfo, type);
+
+        return  cityInfoTO;
+    }
 }

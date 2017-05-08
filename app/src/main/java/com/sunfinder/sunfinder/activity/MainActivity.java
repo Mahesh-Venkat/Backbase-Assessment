@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,31 +30,33 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
     SharedPreferences mSharedPreferences;
 
-    private WeatherInfoTO mWeatherInfoTO;
+    private TextView noCititesTextView;
     private TextView cityTextView;
     private TextView temperatureTextView;
     private TextView humidityTextView;
     private TextView rainChancesTextView;
     private TextView windTextView;
     private ProgressBar progressBar;
+    private AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.temp_cities);
+        setContentView(R.layout.activity_main);
+        noCititesTextView = (TextView) findViewById(R.id.textView_with_no_cities);
         cityTextView = (TextView) findViewById(R.id.textView_city_name);
         temperatureTextView = (TextView) findViewById(R.id.textView_temperature);
         humidityTextView = (TextView) findViewById(R.id.textView_humidity);
         rainChancesTextView = (TextView) findViewById(R.id.textView_clouds);
         windTextView = (TextView) findViewById(R.id.textView_wind);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
         if (findViewById(R.id.fragment_container) != null) {
 
             if (savedInstanceState != null) {
                 return;
             }
-
             CitiesFragment citiesFragment = new CitiesFragment();
 
             citiesFragment.setArguments(getIntent().getExtras());
@@ -61,32 +64,33 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, citiesFragment).commit();
         }
-
         buildCityInfo();
-        GetCityWeatherTask getCityWeatherTask = new GetCityWeatherTask();
-        getCityWeatherTask.execute();
+        displayFirstCitysWeather();
+    }
+
+    public void displayFirstCitysWeather() {
+        if (!Utils.getCitiesFromSharedPReferences(getApplicationContext(), mSharedPreferences).isEmpty()) {
+            String cityInfo = getCityInfoObjectString(0);
+            GetCityWeatherTask getCityWeatherTask = new GetCityWeatherTask();
+            getCityWeatherTask.execute(cityInfo);
+        } else {
+            appBarLayout.setVisibility(View.GONE);
+            noCititesTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onCitySelected(int position) {
 
         if (isNetworkAvailable()) {
+            CityFragment newFragment = new CityFragment();
+            Bundle args = new Bundle();
+            args.putString("CityInfoTO", getCityInfoObjectString(position));
+            newFragment.setArguments(args);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.cities_fragment_container, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-            CityFragment cityFrag = (CityFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.article_fragment);
-
-            if (cityFrag != null) {
-                cityFrag.updateCityView(getCityInfoObjectString(position));
-
-            } else {
-                CityFragment newFragment = new CityFragment();
-                Bundle args = new Bundle();
-                args.putString("CityInfoTO", getCityInfoObjectString(position));
-                newFragment.setArguments(args);
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.cities_fragment_container, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
         } else {
             Toast.makeText(getApplicationContext(), "Please check your network Connectivity", Toast.LENGTH_LONG).show();
         }
@@ -96,24 +100,22 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
         CityInfoTO cityInfoTO = Utils.getCity(position, getApplicationContext(), mSharedPreferences);
 
         Gson gson = new Gson();
-        Type type = new TypeToken<CityInfoTO>() {}.getType();
+        Type type = new TypeToken<CityInfoTO>() {
+        }.getType();
 
         return gson.toJson(cityInfoTO, type);
     }
 
     private void buildCityInfo() {
-        Gson gson = new Gson();
-
         mSharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
-        String cititesInfo = mSharedPreferences.getString(getString(R.string.shared_preference_key),"");
+        String cititesInfo = mSharedPreferences.getString(getString(R.string.shared_preference_key), "");
         if (cititesInfo == null || cititesInfo.isEmpty()) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
 
             editor.putString(getString(R.string.shared_preference_key), Utils.getCititesJSONArrayInString());
             editor.commit();
         }
-
     }
 
     private boolean isNetworkAvailable() {
@@ -133,21 +135,15 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
         @Override
         protected WeatherInfoTO doInBackground(String... urls) {
-
             CityWeatherclient client = new CityWeatherclient();
-
-            cityInfoTO = Utils.getAtlantaCityTO();
-
-            WeatherInfoTO weatherInfoTO = client.getCityTodaysWeather(getApplicationContext(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()));
-
-            return weatherInfoTO;
+            cityInfoTO = Utils.getCityInfoTOFromString(urls[0]);
+            return client.getCityTodaysWeather(getApplicationContext(), Double.toString(cityInfoTO.getLatitude()), Double.toString(cityInfoTO.getLongitude()));
         }
 
         @Override
         protected void onPostExecute(WeatherInfoTO weatherInfoTO) {
 
-
-            progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.GONE);
 
             if (weatherInfoTO != null) {
                 //Update UI here with weathInfoTO
@@ -158,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
                 rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
                 windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + "km/h");
             }
-
         }
     }
-
 }
