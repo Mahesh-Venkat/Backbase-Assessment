@@ -10,6 +10,6 @@
     <string name="measurements_title">Measurements</string>
     <string name="measurements_summary">Please pick a Measurement</string>
     <string name="pref_measurements_default">metrics</string>
-    <string name="list_preference_item_1">Metrics</string>
+    <string name="list_preference_item_1">Metric</string>
     <string name="list_preference_item_2">Imperial</string>
 </resources>

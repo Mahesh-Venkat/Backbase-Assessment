@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/city_background">
+    android:background="@color/color_white">
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/text_city_name"
         android:layout_width="wrap_content"
@@ -11,7 +11,7 @@
         android:padding="20dp"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_backbase"
         android:text=""/>
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
         android:text=""
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_backbase"
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_centerInParent="true"
@@ -49,7 +49,7 @@
         android:layout_alignStart="@+id/text_humidity"
         android:layout_below="@+id/text_humidity"
         android:text=""
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_backbase"
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_centerInParent="true"/>
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_backbase"
         android:textSize="20dp"
         android:textStyle="bold"
         android:layout_below="@+id/text_rain_chances"
@@ -84,7 +84,7 @@
         android:layout_below="@+id/text_wind"
         android:layout_marginLeft="9dp"
         android:layout_marginStart="9dp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_backbase"
         android:textSize="25dp"
         android:textStyle="bold"
         android:text="Forecast" />
@@ -95,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_temperature"
-        android:backgroundTint="@color/color_white"
+        android:backgroundTint="@color/color_backbase"
         android:layout_centerHorizontal="true" />
 
 

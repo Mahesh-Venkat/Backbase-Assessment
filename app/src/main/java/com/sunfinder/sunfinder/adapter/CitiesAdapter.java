@@ -26,13 +26,11 @@ public class CitiesAdapter extends ArrayAdapter<String> {
     SharedPreferences mSharedPreferences;
     private final Context context;
     private final List<String> citiesList;
-    private final List<String>colorList;
 
     public CitiesAdapter(Context context, List<String> cities) {
         super(context, -1, cities);
         this.context = context;
         this.citiesList = cities;
-        this.colorList = getColors();
 
         Activity activity = (Activity) context;
 
@@ -46,8 +44,6 @@ public class CitiesAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.city_row_item, parent, false);
 
         RelativeLayout relativeLayout = (RelativeLayout) rowView.findViewById(R.id.city_item_layout);
-        relativeLayout.setBackgroundColor(Color.parseColor(colorList.get(position%5)));
-
         TextView textView = (TextView) rowView.findViewById(R.id.city_name);
 
         ImageButton deleteButton = (ImageButton) rowView.findViewById(R.id.delete_button);
@@ -105,16 +101,5 @@ public class CitiesAdapter extends ArrayAdapter<String> {
 
 
         return cityInfoTOList;
-    }
-
-    private List<String> getColors() {
-        List<String> colors = new ArrayList<>();
-        colors.add("#CD5C5C");
-        colors.add("#17A589");
-        colors.add("#5499C7");
-        colors.add("#839192");
-        colors.add("#FFC300");
-
-        return colors;
     }
 }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunfinder.sunfinder.R;
+import com.sunfinder.sunfinder.activity.MainActivity;
 import com.sunfinder.sunfinder.adapter.CitiesAdapter;
 import com.sunfinder.sunfinder.transferobject.CityInfoTO;
 
@@ -41,6 +42,14 @@ public class CitiesFragment extends ListFragment {
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         setHasOptionsMenu(true);
         setListAdapter(new CitiesAdapter(getContext(), getCities()));
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(getContext() instanceof MainActivity){
+            ((MainActivity)getContext()).displayFirstCitysWeather();
+        }
     }
 
     @Override

@@ -16,12 +16,14 @@ public class ForecastedWeatherAdapter extends ArrayAdapter<WeatherInfoTO> {
 
     private final Context context;
     private List<WeatherInfoTO> forecastedWeatherInfoTO = null;
+    private String units;
 
 
-    public ForecastedWeatherAdapter(Context context, List<WeatherInfoTO> forecastedWeather) {
+    public ForecastedWeatherAdapter(Context context, List<WeatherInfoTO> forecastedWeather, String units) {
         super(context, -1, forecastedWeather);
         this.context = context;
         this.forecastedWeatherInfoTO = forecastedWeather;
+        this.units = units;
     }
 
     @Override
@@ -31,20 +33,26 @@ public class ForecastedWeatherAdapter extends ArrayAdapter<WeatherInfoTO> {
         View rowView = inflater.inflate(R.layout.future_weather_item, parent, false);
 
         TextView dayTextView = (TextView) rowView.findViewById(R.id.text_column_day);
-        dayTextView.setText(forecastedWeatherInfoTO.get(position).getDayOftheWeek());
-
         TextView temperatureTextView = (TextView) rowView.findViewById(R.id.text_column_temperature);
-        int temperature = (int)Math.floor(forecastedWeatherInfoTO.get(position).getMain().getTemp() + 0.5d);
-        temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
-
         TextView humidityTextView = (TextView) rowView.findViewById(R.id.text_column_humidity);
-        humidityTextView.setText(Double.toString(forecastedWeatherInfoTO.get(position).getMain().getHumidity()) + "%");
-
         TextView rainChancesTextView = (TextView) rowView.findViewById(R.id.text_column_rain_chance_item);
-        rainChancesTextView.setText(forecastedWeatherInfoTO.get(position).getWeather().get(0).getDescription());
-
         TextView windTextView = (TextView) rowView.findViewById(R.id.text_column_wind);
-        windTextView.setText(Double.toString(forecastedWeatherInfoTO.get(position).getWind().getSpeed()) + "km/h");
+
+        if (units.equals(getContext().getResources().getString(R.string.list_preference_item_1))) {
+            dayTextView.setText(forecastedWeatherInfoTO.get(position).getDayOftheWeek());
+            int temperature = (int) Math.floor(forecastedWeatherInfoTO.get(position).getMain().getTemp() + 0.5d);
+            temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
+            humidityTextView.setText(Double.toString(forecastedWeatherInfoTO.get(position).getMain().getHumidity()) + "%");
+            rainChancesTextView.setText(forecastedWeatherInfoTO.get(position).getWeather().get(0).getDescription());
+            windTextView.setText(Double.toString(forecastedWeatherInfoTO.get(position).getWind().getSpeed()) + "km/h");
+        }  else {
+            dayTextView.setText(forecastedWeatherInfoTO.get(position).getDayOftheWeek());
+            int temperature = (int) Math.floor(forecastedWeatherInfoTO.get(position).getMain().getTemp() + 0.5d);
+            temperatureTextView.setText(Integer.toString(temperature) + " \u2109");
+            humidityTextView.setText(Double.toString(forecastedWeatherInfoTO.get(position).getMain().getHumidity()) + "%");
+            rainChancesTextView.setText(forecastedWeatherInfoTO.get(position).getWeather().get(0).getDescription());
+            windTextView.setText(Double.toString(forecastedWeatherInfoTO.get(position).getWind().getSpeed()) + " m/h");
+        }
 
         return rowView;
     }

@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <corners android:radius="10dip"/>
-    <stroke android:color="@color/city_weather_background" android:width="5dip"/>
-    <solid android:color="@color/city_weather_background"/>
+    <stroke android:color="@color/color_backbase_dark" android:width="5dip"/>
+    <solid android:color="@color/color_backbase"/>
 </shape>

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="@drawable/city_item_border"
     android:id="@+id/city_item_layout">
 
 
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="lklk"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_white"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_alignParentLeft="true"

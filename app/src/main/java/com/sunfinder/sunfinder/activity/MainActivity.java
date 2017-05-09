@@ -65,7 +65,11 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
                     .add(R.id.fragment_container, citiesFragment).commit();
         }
         buildCityInfo();
-        setDefaultMeasurementsSharedPreferences();
+
+        String units = mSharedPreferences.getString("measurements", "");
+        if (units == null || units.isEmpty()) {
+            setDefaultMeasurementsSharedPreferences();
+        }
         displayFirstCitysWeather();
     }
 
@@ -81,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
     }
 
     public void onCitySelected(int position) {
-
 
         if (isNetworkAvailable()) {
             CityFragment newFragment = new CityFragment();
@@ -138,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
 
     private class GetCityWeatherTask extends AsyncTask<String, Void, WeatherInfoTO> {
         CityInfoTO cityInfoTO;
-        String units = mSharedPreferences.getString("measurements","");
+        String units = mSharedPreferences.getString("measurements", "");
 
         @Override
         protected void onPreExecute() {
@@ -159,13 +162,22 @@ public class MainActivity extends AppCompatActivity implements CitiesFragment.On
             progressBar.setVisibility(View.GONE);
 
             if (weatherInfoTO != null) {
-                //Update UI here with weathInfoTO
-                cityTextView.setText(cityInfoTO.getCityName());
-                int temperature = (int) Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
-                temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
-                humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity()) + "%");
-                rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
-                windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + "km/h");
+                if (units.equals(getResources().getString(R.string.list_preference_item_1))) {
+                    //Update UI here with weathInfoTO
+                    cityTextView.setText(cityInfoTO.getCityName());
+                    int temperature = (int) Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
+                    temperatureTextView.setText(Integer.toString(temperature) + " \u2103");
+                    humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity()) + "%");
+                    rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
+                    windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + " km/h");
+                } else {
+                    cityTextView.setText(cityInfoTO.getCityName());
+                    int temperature = (int) Math.floor(weatherInfoTO.getMain().getTemp() + 0.5d);
+                    temperatureTextView.setText(Integer.toString(temperature) + " \u2109");
+                    humidityTextView.setText("Humidity: " + Double.toString(weatherInfoTO.getMain().getHumidity()) + "%");
+                    rainChancesTextView.setText("Rain Chances: " + weatherInfoTO.getWeather().get(0).getDescription());
+                    windTextView.setText("Wind: " + Double.toString(weatherInfoTO.getWind().getSpeed()) + " m/h");
+                }
             }
         }
     }

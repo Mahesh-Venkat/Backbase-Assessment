@@ -14,12 +14,13 @@ import com.sunfinder.sunfinder.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements OnPreferenceChangeListener   {
     SharedPreferences mSharedPreferences;
-    Resources resources = getActivity().getResources();
+    Resources resources;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         // Load the Preferences from the XML file
         addPreferencesFromResource(R.xml.app_preferences);
+        resources = getActivity().getResources();
         mSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
         ListPreference measurementListPreference = (ListPreference) findPreference("measurements_list_preference");
@@ -42,7 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements OnPref
         if (((String) newValue).equals(resources.getString(R.string.list_preference_item_1))) {
             updateSharedPreferencesWithSelectedMeasurement(0);
         } else {
-            updateSharedPreferencesWithSelectedMeasurement(0);
+            updateSharedPreferencesWithSelectedMeasurement(1);
         }
 
         return true;
